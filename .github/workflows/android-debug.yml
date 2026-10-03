@@ -48,3 +48,4 @@ jobs:
             echo "Release already exists; existing assets left unchanged."
           else
             gh release create v1.1.0-android --target "$GITHUB_SHA" --title "Winter Arc Android v1.1.0 — Task alarms" --prerelease --notes-file RELEASE_NOTES_1.1.0.md winter-arc-v1.1.0.apk SHA256SUMS.txt
+          fi
