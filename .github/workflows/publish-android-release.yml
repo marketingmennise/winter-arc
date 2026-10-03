@@ -1,0 +1,60 @@
+name: Publish Android APK Release
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-android-release.yml'
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: winter-arc-android-v1-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download the verified APK
+        uses: actions/download-artifact@v4
+        with:
+          name: winter-arc-debug-apk
+          path: apk
+          run-id: 37119932546
+          github-token: ${{ github.token }}
+      - name: Publish direct APK download
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          mv apk/app-debug.apk apk/winter-arc-v1.0.0.apk
+          cd apk
+          sha256sum winter-arc-v1.0.0.apk > SHA256SUMS.txt
+          cat > release-notes.md <<'NOTES'
+          Winter Arc for Android — personal-use preview.
+
+          Download **winter-arc-v1.0.0.apk** below and open it on your Android phone (Android 7 or newer).
+
+          Includes your 90-day habit routine, prayer counters, weekly commitments, journal, progress, local storage, JSON backup import/export, and optional desk and water reminders.
+
+          This is the debug-signed APK from successful build #2. Automated tests and compilation passed; physical-device installation and notification delivery have not yet been tested.
+
+          The app keeps a separate local copy and does not automatically sync with the web tracker. Export your JSON backup before replacing an older installation: builds signed with a different debug key may require reinstalling.
+
+          Source commit: 9fb50e9a9ad0d55ed3e8b7e7b9442b1d5423c0f8
+          NOTES
+          if gh release view v1.0.0-android > /dev/null 2>&1; then
+            echo "Release already exists; leaving its assets unchanged."
+            exit 0
+          fi
+          gh release create v1.0.0-android \
+            --target 9fb50e9a9ad0d55ed3e8b7e7b9442b1d5423c0f8 \
+            --title "Winter Arc Android v1.0.0" \
+            --prerelease \
+            --notes-file release-notes.md \
+            winter-arc-v1.0.0.apk SHA256SUMS.txt
