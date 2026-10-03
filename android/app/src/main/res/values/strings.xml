@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">Winter Arc</string>
-    <string name="title_activity_main">Winter Arc</string>
-    <string name="package_name">com.rutvik.winterarc</string>
-    <string name="custom_url_scheme">com.rutvik.winterarc</string>
+    <string name="app_name">Winter Arc Generic</string>
+    <string name="title_activity_main">Winter Arc Generic</string>
+    <string name="package_name">com.winterarc.tracker</string>
+    <string name="custom_url_scheme">com.winterarc.tracker</string>
 </resources>

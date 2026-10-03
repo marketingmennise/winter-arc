@@ -3,19 +3,11 @@
 import {useCallback,useEffect,useRef,useState} from 'react';
 import {Capacitor} from '@capacitor/core';
 import {Preferences} from '@capacitor/preferences';
-import seed from '@/lib/seed.json';
+import {createGenericTracker} from '@/lib/generic-start';
 import {applyAction,type Action,type Tracker} from '@/lib/tracker';
-import {applyEverydayCare} from '@/lib/everyday-care';
 import {OrderedTrackerWriter,PHONE_STORAGE_KEY,exportTrackerBackup,parseTrackerBackup,validateTrackerBackup} from '@/lib/android-backup';
 
-function freshTracker(){
- const next=structuredClone(seed) as Tracker;
- // This app starts a fresh phone copy. Carry over web progress only by explicit import.
- next.checks={};next.logs={};next.reviews={};next.recitations={};next.activity={};next.appliedEditIds=[];next.textEditRevisions={};
- for(const task of next.tasks){task.done=false;delete task.notes}
- for(const goal of next.goals)goal.current=null;
- return applyEverydayCare(next);
-}
+function freshTracker(){return createGenericTracker();}
 async function readPhone(){return Capacitor.isNativePlatform()?(await Preferences.get({key:PHONE_STORAGE_KEY})).value:localStorage.getItem(PHONE_STORAGE_KEY)}
 async function writePhone(state:Tracker){const value=JSON.stringify(state);if(Capacitor.isNativePlatform())await Preferences.set({key:PHONE_STORAGE_KEY,value});else localStorage.setItem(PHONE_STORAGE_KEY,value)}
 
@@ -31,7 +23,7 @@ export default function useTrackerSync(){
    if(mounted.current)setLoading(true);
    try{
     const saved=await readPhone();
-    const original=saved===null?null:parseTrackerBackup(saved),next=applyEverydayCare(original??freshTracker());
+    const original=saved===null?null:parseTrackerBackup(saved),next=original??freshTracker();
     blockedStorage.current=false;ref.current=next;
     if(mounted.current){setState(next);setDurable(true);setError('')}
     if(original===null||next!==original)await writer.current!.save(next);
@@ -52,7 +44,7 @@ export default function useTrackerSync(){
  const retry=useCallback(()=>{void load()},[load]);
  const importBackup=useCallback(async(value:Tracker)=>{
   if(importing.current)throw new Error('A backup is already being imported.');
-  const next=applyEverydayCare(validateTrackerBackup(value));
+  const next=validateTrackerBackup(value);
   importing.current=true;
   // The replacement is explicit. Keep the same candidate on screen and in the retry
   // queue if storage fails, so retry cannot secretly switch to a different copy.

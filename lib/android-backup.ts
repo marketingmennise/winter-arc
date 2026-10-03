@@ -1,7 +1,7 @@
 import type {Tracker} from './tracker';
 
 export const MAX_BACKUP_BYTES=2*1024*1024;
-export const PHONE_STORAGE_KEY='winter-arc.phone.tracker.v1';
+export const PHONE_STORAGE_KEY='winter-arc.generic.tracker.v1';
 const unsafe=new Set(['__proto__','prototype','constructor']);
 function fail(message:string):never{throw new Error('Invalid Winter Arc backup: '+message)}
 function object(value:unknown,label:string):Record<string,unknown>{if(!value||typeof value!=='object'||Array.isArray(value))fail(label+' must be an object.');return value as Record<string,unknown>}

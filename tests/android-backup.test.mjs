@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import {parseTrackerBackup,validateTrackerBackup,backupSummary,OrderedTrackerWriter,MAX_BACKUP_BYTES} from '../lib/android-backup.ts';
 const seed=JSON.parse(readFileSync(new URL('../lib/seed.json',import.meta.url)));
-const fixture=()=>structuredClone(seed);
+const fixture=()=>({...structuredClone(seed),tasks:[{id:'test-task',title:'Test task',project:'Personal',week:1,definition:'A test fixture.',done:false}]});
 
 test('web backup round trip preserves real entries and optional history',()=>{
  const s=fixture();s.logs['2026-10-01']={sleep:0,mood:10,priority:'My priority',journal:'My reflection'};s.tasks[0].done=true;s.tasks[0].notes='Keep my notes';s.recitations={'2026-10-03':4};s.activity={'2026-10-03':{cycling:true,other:false}};s.contentUpdates=['imported'];s.appliedEditIds=['my-id'];s.textEditRevisions={'log:2026-10-01:priority':{time:123,id:'my-id'}};s.habits[0].scheduleBefore={date:'2026-10-03',active:false,days:[1,3]};s.habits[0].startsOn='2026-10-01';

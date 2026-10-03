@@ -1,4 +1,4 @@
-package com.rutvik.winterarc;
+package com.winterarc.tracker;
 
 import android.Manifest;
 import android.app.*;
@@ -12,10 +12,10 @@ import java.util.TimeZone;
 
 public final class ArcAlarmStore {
     static final String CHANNEL = "winter-arc-ringing-alarms-v1";
-    static final String FIRE = "com.rutvik.winterarc.ALARM_FIRE";
-    static final String DISMISS = "com.rutvik.winterarc.ALARM_DISMISS";
-    static final String SNOOZE = "com.rutvik.winterarc.ALARM_SNOOZE";
-    static final String CLOSED = "com.rutvik.winterarc.ALARM_CLOSED";
+    static final String FIRE = "com.winterarc.tracker.ALARM_FIRE";
+    static final String DISMISS = "com.winterarc.tracker.ALARM_DISMISS";
+    static final String SNOOZE = "com.winterarc.tracker.ALARM_SNOOZE";
+    static final String CLOSED = "com.winterarc.tracker.ALARM_CLOSED";
     static final int TEST_ID = 99999, SNOOZE_OFFSET = 100000;
     static android.content.SharedPreferences prefs(Context c) { return c.getSharedPreferences("winter_arc_alarms", Context.MODE_PRIVATE); }
     static AlarmManager manager(Context c) { return (AlarmManager)c.getSystemService(Context.ALARM_SERVICE); }
@@ -49,13 +49,13 @@ public final class ArcAlarmStore {
         JSONObject src=source(c,a);if(src==null)return 0;
         JSONArray dates=src.optJSONArray("dates");if(dates==null)return 0;long next=Long.MAX_VALUE;
         for(int i=0;i<dates.length();i++){String date=dates.optString(i);if(!a.optString("date").isEmpty()&&!a.optString("date").equals(date))continue;
-            long at=AlarmTime.onDate(date,a.optString("time"),TimeZone.getTimeZone("Asia/Kolkata"));if(at>System.currentTimeMillis())next=Math.min(next,at);}
+            long at=AlarmTime.onDate(date,a.optString("time"),TimeZone.getDefault());if(at>System.currentTimeMillis())next=Math.min(next,at);}
         return next==Long.MAX_VALUE?0:next;
     }
     static boolean due(Context c,JSONObject a) {
         if(a.optString("source").isEmpty())return true;
         JSONObject src=source(c,a);if(src==null)return false;
-        java.text.SimpleDateFormat format=new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT);format.setTimeZone(TimeZone.getTimeZone("Asia/Kolkata"));String today=format.format(new java.util.Date());
+        java.text.SimpleDateFormat format=new java.text.SimpleDateFormat("yyyy-MM-dd",java.util.Locale.ROOT);format.setTimeZone(TimeZone.getDefault());String today=format.format(new java.util.Date());
         if(!a.optString("date").isEmpty()&&!today.equals(a.optString("date")))return false;
         JSONArray dates=src.optJSONArray("dates");if(dates!=null)for(int n=0;n<dates.length();n++)if(today.equals(dates.optString(n)))return true;return false;
     }

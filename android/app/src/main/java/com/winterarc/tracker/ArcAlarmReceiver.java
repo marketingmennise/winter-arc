@@ -1,4 +1,4 @@
-package com.rutvik.winterarc;
+package com.winterarc.tracker;
 
 import android.content.*;
 import androidx.core.content.ContextCompat;

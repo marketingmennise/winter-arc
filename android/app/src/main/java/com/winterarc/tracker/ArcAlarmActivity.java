@@ -1,4 +1,4 @@
-package com.rutvik.winterarc;
+package com.winterarc.tracker;
 
 import android.app.Activity;
 import android.content.*;

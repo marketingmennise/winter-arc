@@ -1,4 +1,4 @@
-package com.rutvik.winterarc;
+package com.winterarc.tracker;
 
 import android.content.*;
 import android.media.AudioManager;
@@ -48,7 +48,7 @@ public class ArcAlarmsPlugin extends Plugin {
         if(input.optInt("id",0)==0&&count>=30)throw new Exception("Keep up to 30 personal alarms. Delete one to add another.");
         JSONObject a=new JSONObject().put("id",id).put("label",label).put("time",input.optString("time")).put("days",input.optInt("days",127)).put("enabled",input.optBoolean("enabled",true));String source=input.optString("source","");String date=input.optString("date","");
         if(!source.isEmpty()&&ArcAlarmStore.context(getContext()).optJSONObject(source)==null)throw new Exception("This habit or task is unavailable. Choose another.");
-        if(!date.isEmpty())AlarmTime.onDate(date,input.optString("time"),TimeZone.getTimeZone("Asia/Kolkata"));
+        if(!date.isEmpty())AlarmTime.onDate(date,input.optString("time"),TimeZone.getDefault());
         a.put("source",source).put("date",date);if(a.optBoolean("enabled")&&ArcAlarmStore.nextAt(getContext(),a)==0)throw new Exception("No unfinished occurrence remains at that time. Choose a future task date or a different habit.");next.put(a);
         ArcAlarmStore.replace(getContext(),next);getState(call);
     }catch(Exception e){call.reject(e.getMessage());}}

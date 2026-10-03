@@ -1,4 +1,4 @@
-package com.rutvik.winterarc;
+package com.winterarc.tracker;
 
 import android.app.*;
 import android.content.*;
@@ -37,7 +37,7 @@ public class ArcAlarmService extends Service {
         Intent screen=new Intent(this,ArcAlarmActivity.class).putExtra("id",id).putExtra("label",label).putExtra("detail",ArcAlarmStore.detail(this,alarm)).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent open=PendingIntent.getActivity(this,id,screen,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder n=new NotificationCompat.Builder(this,ArcAlarmStore.CHANNEL)
-            .setSmallIcon(com.rutvik.winterarc.R.drawable.ic_notification).setContentTitle(label)
+            .setSmallIcon(com.winterarc.tracker.R.drawable.ic_notification).setContentTitle(label)
             .setContentText("Ringing · tap to open, snooze or dismiss")
             .setCategory(NotificationCompat.CATEGORY_ALARM).setPriority(NotificationCompat.PRIORITY_MAX)
             .setOngoing(true).setVisibility(NotificationCompat.VISIBILITY_PRIVATE).setContentIntent(open)

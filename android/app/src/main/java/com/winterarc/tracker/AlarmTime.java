@@ -1,4 +1,4 @@
-package com.rutvik.winterarc;
+package com.winterarc.tracker;
 
 import java.util.Calendar;
 import java.util.TimeZone;

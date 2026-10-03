@@ -1,79 +1,44 @@
-# Winter Arc for Android
+# Winter Arc Generic
 
-A personal Android habit tracker for Rutvik's 90-day Winter Arc. React is bundled inside Capacitor; the app works with a local phone copy and native Android notifications.
+An offline-first Android habit tracker for a fresh 90-day arc. The generic edition includes eight editable starter habits, daily check-ins, weekly planning, progress views, optional goals, JSON backups, reminders and native alarms.
 
-## What is included
+## Start using it
 
-- Daily habits, prayer counters, weekly commitments, journal, progress, and editable goals.
-- A charcoal and lime launch screen and Android icon.
-- Native movement and water reminders every 30 minutes during configurable desk hours (default 09:00–18:00, every day).
-- One combined notification when both reminder types are enabled; no reminders outside the chosen hours.
-- Phone storage and manual JSON backup import/export.
+Download `winter-arc-generic-v1.2.0.apk` from [Releases](https://github.com/marketingmennise/winter-arc/releases/tag/v1.2.0-generic). Android may ask you to allow installation from the app used to download it. This is a debug-signed preview APK, not a Play Store release.
 
-## Data and privacy
+The arc begins on your first launch using your phone's local date. In Settings, edit your name, start date and routine. Add your own habits and optional goals; weekly projects start empty. All habits are suggestions and can be renamed, rescheduled or switched off.
 
-**The Android app keeps a separate local copy. It does not automatically sync with the private web tracker.** It begins with an unchecked routine. To move progress from the web app, export a web backup, transfer that JSON to the phone, and use Settings → Import backup. Import replaces the phone copy after explicit confirmation. Export your current phone backup first.
+## Generic edition and privacy
 
-The existing private web tracker can be opened in your normal browser from Settings. Sign in there normally. No access token or account credential is included in this Android project. Do not make the web tracker public to connect the app.
+- Application ID: `com.winterarc.tracker`; app label: **Winter Arc Generic**.
+- Installs independently of the personal edition and does not read its app storage.
+- Includes no personal name, company projects, religious routine, private goals or completion history.
+- Data stays in local app storage. There is no account, cloud database or automatic cloud sync.
+- Export backups from Settings before uninstalling or changing phones. Import only a backup you intend to use; imports replace the current tracker.
+- The personal edition remains available on `main`, the `personal-v1.1` branch and its existing release.
 
-Android automatic cloud backup is disabled. Use the app's JSON backup feature before uninstalling or clearing storage. Keep exported backups private: they include journal entries and habit history.
+## Alarms and reminders
 
-## Task alarms (v1.1.0)
+Create an alarm and optionally link it to a habit or project task. Alerts use its title and instructions. Native alarms can ring and vibrate, with Dismiss and five-minute Snooze actions. A full-screen alert can appear when Android permits it. Exact alarm, notification and full-screen permissions are configurable in Settings. Android, device settings and manufacturer battery restrictions may affect delivery; use the built-in Test alarm on your phone. Alarms use the phone's time zone. No alarm is enabled by default.
 
-Open **Settings → Task alarms**. Allow Notifications, On-time alarms (Alarms & reminders), and Full-screen access. Check the phone's alarm volume, then use **Test ringing**.
+## Development
 
-Choose **Add task alarm**, select a habit or project task, and set a time. Habit alarms follow their scheduled days across the 90-day arc. Project tasks use the selected date within their planned week. Linked alarms follow India time, matching the tracker; custom alarms and desk alarms follow the phone's local time. Alarm times are not guessed or enabled automatically.
-
-- The ringing screen shows the task title and what needs doing.
-- Sound and vibration repeat until Dismiss, Snooze (5 minutes), or the 5-minute auto-silence limit.
-- Alarms due together queue rather than replacing one another.
-- Completed checks/tasks on this phone are skipped. Dismiss does not mark a task complete.
-- **Desk reminders → Full-screen alarm** enables the same ringing behavior every 30 minutes during the chosen hours, with one combined movement/water prompt.
-- Android may display a prominent notification instead of opening full-screen while the phone is unlocked. The full-screen permission and a high-importance Ringing alarms channel are required for the lock screen.
-- Sound uses the system alarm volume and respects Android's Do Not Disturb rules. Zero alarm volume means no audible ring. Manufacturer battery limits can affect behavior; a powered-off or force-stopped app cannot ring. Open the app after force-stopping it. Schedules are restored after boot, app updates, permission grants, and time changes.
-- Alarm settings are stored locally and are separate from the tracker JSON backup. Recreate alarm schedules after reinstalling. Existing web and tracker data formats are unchanged.
-
-Native alarms use AlarmManager with user-granted exact-alarm access and a media-playback foreground service. They do not depend on a JavaScript timer or an open WebView. Physical-device/locked-screen delivery still needs a check on your phone; test ringing and a near-future scheduled alarm before relying on it.
-
-## Install the provided APK
-
-Open `winter-arc-android-debug.apk` on your Android phone. If prompted, allow installation from the app you used to open it. This is a debug-signed personal build, not a Play Store release. Android 7 (API 24) or later and an updated Android System WebView are required.
-
-For quiet prompts, open Settings → Desk reminders → Gentle notification → Enable reminders. Android 13+ will ask for notification permission. Use Send test to check delivery. Notifications are approximate: battery-saving settings, Doze, a force-stop, or a locked Private Space can delay or stop delivery. Gentle notifications do not need exact-alarm access; ringing alarms do. Pause reminders disables all scheduled desk prompts until you enable them again. A reminder is not an instruction to drink a fixed amount each time.
-
-## Build locally
-
-Prerequisites: Node 24, JDK 21, Android SDK platform 36/build-tools 36.0.0. Android Studio Otter (2025.2.1) or newer includes compatible tooling. Configure `ANDROID_HOME` and `JAVA_HOME` for your installation.
+Requirements: Node.js 24, JDK 21 and Android SDK 36/build-tools 36.0.0.
 
 ```sh
 npm ci
+npm test
+npm run dev
+```
+
+Build the Android package:
+
+```sh
 npm run sync
 cd android
 ./gradlew :app:assembleDebug
 ```
 
-Windows: use `gradlew.bat :app:assembleDebug` from the `android` directory. Output: `android/app/build/outputs/apk/debug/app-debug.apk`. The `android` folder can also be opened directly in Android Studio.
+APK output: `android/app/build/outputs/apk/debug/app-debug.apk`.
 
-The included GitHub Actions workflow produces a downloadable debug APK after pushing this folder's contents to a repository or running Build Android APK manually. A release for the Play Store needs your own protected signing key, release build and store submission; this project does not publish anything automatically.
-
-## Development
-
-```sh
-npm run dev
-npm run build
-npm run sync
-```
-
-Browser preview shows the local tracker, while native reminders are available only in Android. The Android app makes no `/api/tracker` requests and contains no remote `server.url` WebView configuration.
-
-Pinned major versions: Capacitor 8.5.2, Local Notifications 8.3.1, React 19.2.6, Vite 8.3.2, Android compile/target SDK 36, Gradle 8.14.3. Node modules and generated build directories are intentionally excluded from the source ZIP.
-
-## Updating this personal build
-
-The provided APK is signed with a debug key. A later build made on another computer or GitHub Actions can use a different debug key, so Android may refuse to install it over the current app. **Export and save your JSON backup before uninstalling or reinstalling.** For dependable updates, configure your own consistent signing key and keep it private; never commit a release keystore or its password to GitHub.
-
-## Verification
-
-The bundled frontend passed TypeScript checking and a Vite production build. Backup validation/ordered-write tests and reminder schedule checks passed. The Android debug build compiled successfully. Its APK signature, minimum Android version, and merged permissions were inspected. Native reminder delivery and installation have not been tested on a physical Android phone or emulator; use Settings → Send test after installation.
-
-Alarm scheduling tests cover weekday rollover, midnight, India time, DST, invalid dates, completed-task filtering, arc boundaries, and duplicate reminder prevention. The source seed contains the configured routine but no personal completion history or journal entries. GitHub Actions runs the backup and reminder tests before building the APK.
+The generic source lives on the `generic` branch. GitHub Actions tests the app, builds the APK, and publishes the versioned generic preview release with a SHA-256 checksum. Existing release assets are left unchanged. Bump the Android version and workflow release tag for a subsequent release.

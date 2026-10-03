@@ -1,8 +1,8 @@
-name: Build Android APK
+name: Build Generic Android APK
 on:
   workflow_dispatch:
   push:
-    branches: [main]
+    branches: [generic]
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -27,25 +27,25 @@ jobs:
       - run: npm test
       - name: Test native alarm scheduling
         run: |
-          javac -d /tmp/arc-alarm-tests android/app/src/main/java/com/rutvik/winterarc/AlarmTime.java tests/java/com/rutvik/winterarc/AlarmTimeTest.java
-          java -cp /tmp/arc-alarm-tests com.rutvik.winterarc.AlarmTimeTest
+          javac -d /tmp/arc-alarm-tests android/app/src/main/java/com/winterarc/tracker/AlarmTime.java tests/java/com/winterarc/tracker/AlarmTimeTest.java
+          java -cp /tmp/arc-alarm-tests com.winterarc.tracker.AlarmTimeTest
       - run: npm run sync
       - run: chmod +x android/gradlew && cd android && ./gradlew :app:assembleDebug --no-daemon --max-workers=2
       - uses: actions/upload-artifact@v4
         with:
           if-no-files-found: error
-          name: winter-arc-debug-apk
+          name: winter-arc-generic-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
-      - name: Publish Android v1.1.0 APK
+      - name: Publish Android v1.2.0 APK
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          cp android/app/build/outputs/apk/debug/app-debug.apk winter-arc-v1.1.0.apk
-          sha256sum winter-arc-v1.1.0.apk > SHA256SUMS.txt
-          if gh release view v1.1.0-android > /dev/null 2>&1; then
+          cp android/app/build/outputs/apk/debug/app-debug.apk winter-arc-generic-v1.2.0.apk
+          sha256sum winter-arc-generic-v1.2.0.apk > SHA256SUMS.txt
+          if gh release view v1.2.0-generic > /dev/null 2>&1; then
             echo "Release already exists; existing assets left unchanged."
           else
-            gh release create v1.1.0-android --target "$GITHUB_SHA" --title "Winter Arc Android v1.1.0 — Task alarms" --prerelease --notes-file RELEASE_NOTES_1.1.0.md winter-arc-v1.1.0.apk SHA256SUMS.txt
+            gh release create v1.2.0-generic --target "$GITHUB_SHA" --title "Winter Arc Generic v1.2.0" --prerelease --notes-file RELEASE_NOTES_GENERIC.md winter-arc-generic-v1.2.0.apk SHA256SUMS.txt
           fi

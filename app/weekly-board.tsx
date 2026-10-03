@@ -1,10 +1,10 @@
 'use client';
 
 import {useEffect,useRef,useState} from 'react';
-import {Check,ChevronLeft,ChevronRight,CircleHelp,Flame,Minus,Moon,Sun,Compass,Settings2,ChevronDown,Plus} from 'lucide-react';
+import {Check,ChevronLeft,ChevronRight,CircleHelp,Flame,Minus,Moon,Sun,Compass,Settings2,ChevronDown} from 'lucide-react';
 import {Checkbox} from '@/components/ui/checkbox';
 import {Popover,PopoverContent,PopoverTrigger} from '@/components/ui/popover';
-import {type Habit,type Tracker,dates,score,scheduled,streak,formatDate,dayNumber,habitGroup,chalisaCount} from '@/lib/tracker';
+import {type Habit,type Tracker,dates,score,scheduled,streak,formatDate,dayNumber,habitGroup} from '@/lib/tracker';
 
 const groups=[
  {key:'morning',title:'Morning',icon:Sun,},
@@ -12,18 +12,18 @@ const groups=[
  {key:'evening',title:'Evening',icon:Moon,}
 ];
 
-type Props={state:Tracker;date:string;current:string;onDate:(date:string)=>void;onToggle:(id:string,date:string,done:boolean)=>void;onEdit:()=>void;onCount:(value:number,date:string)=>void};
+type Props={state:Tracker;date:string;current:string;onDate:(date:string)=>void;onToggle:(id:string,date:string,done:boolean)=>void;onEdit:()=>void};
 
 function Definition({habit,matrix=false}:{habit:Habit;matrix?:boolean}){
  return <Popover><PopoverTrigger asChild>{matrix?<button className="ledger-habit-name" aria-label={'Habit details: '+habit.name}><span>{habit.name}</span><CircleHelp size={14} aria-hidden="true"/></button>:<button className="habit-info" aria-label={'What counts for '+habit.name}><CircleHelp size={17} aria-hidden="true"/></button>}</PopoverTrigger><PopoverContent className="habit-popover" align="start"><strong>{habit.name}</strong><p>{habit.definition}</p></PopoverContent></Popover>;
 }
 
-export default function WeeklyBoard({state,date,current,onDate,onToggle,onEdit,onCount}:Props){
+export default function WeeklyBoard({state,date,current,onDate,onToggle,onEdit}:Props){
  const [filter,setFilter]=useState<'all'|'todo'|'done'>('all');
  const [view,setView]=useState<'day'|'week'>('day');
  const [collapsed,setCollapsed]=useState<string[]>(['focus','evening']);
  useEffect(()=>{const open=(event:Event)=>{const id=(event as CustomEvent<string>).detail;const habit=state.habits.find(h=>h.id===id);if(!habit)return;setView('day');setFilter('all');setCollapsed(groups.filter(g=>g.key!==habitGroup(habit)).map(g=>g.key));requestAnimationFrame(()=>{const element=document.getElementById(`day-${date}-${id}`);element?.scrollIntoView({block:'center',behavior:window.matchMedia('(prefers-reduced-motion:reduce)').matches?'instant':'smooth'});element?.focus({preventScroll:true})})};window.addEventListener('winter-arc-open-habit',open);return()=>window.removeEventListener('winter-arc-open-habit',open)},[state.habits,date]);
- const [last,setLast]=useState<{habit:Habit;date:string;done:boolean;previousCount?:number;count?:number}|null>(null);
+ const [last,setLast]=useState<{habit:Habit;date:string;done:boolean}|null>(null);
  useEffect(()=>{
   try{
    const saved=JSON.parse(localStorage.getItem('winter-arc-routine-view')||'null');
@@ -32,7 +32,7 @@ export default function WeeklyBoard({state,date,current,onDate,onToggle,onEdit,o
     if(['all','todo','done'].includes(saved.filter))setFilter(saved.filter);
     if(Array.isArray(saved.collapsed))setCollapsed(saved.collapsed.filter((g:unknown)=>['morning','focus','evening'].includes(String(g))));
    }else{
-    const hour=Number(new Intl.DateTimeFormat('en-GB',{hour:'2-digit',hourCycle:'h23',timeZone:'Asia/Kolkata'}).format(new Date()));
+    const hour=Number(new Intl.DateTimeFormat('en-GB',{hour:'2-digit',hourCycle:'h23'}).format(new Date()));
     const currentGroup=hour<12?'morning':hour<18?'focus':'evening';
     setCollapsed(groups.filter(g=>g.key!==currentGroup).map(g=>g.key));
    }
@@ -43,13 +43,12 @@ export default function WeeklyBoard({state,date,current,onDate,onToggle,onEdit,o
   try{localStorage.setItem('winter-arc-routine-view',JSON.stringify(next))}catch{}
  };
  const root=useRef<HTMLElement>(null),ds=dates(state),week=Math.ceil(dayNumber(state.config.start,date)/7),weekDates=ds.slice((week-1)*7,week*7),future=date>current;
- const ordered=groups.flatMap(group=>state.habits.filter(h=>habitGroup(h)===group.key&&(h.active||weekDates.some(d=>scheduled(h,d)))).sort((a,b)=>Number(b.id==='H29')-Number(a.id==='H29')));
+ const ordered=groups.flatMap(group=>state.habits.filter(h=>habitGroup(h)===group.key&&(h.active||weekDates.some(d=>scheduled(h,d)))));
  const daily=ordered.filter(h=>scheduled(h,date));
  const completed=future?0:daily.filter(h=>state.checks[date]?.[h.id]).length;
  const matches=(h:Habit)=>filter==='all'||(scheduled(h,date)&&(filter==='done'?(!future&&!!state.checks[date]?.[h.id]):(future||!state.checks[date]?.[h.id])));
  const toggle=(habit:Habit,d:string,done:boolean)=>{
-  const previousCount=habit.id==='H29'?chalisaCount(state,d):undefined;
-  onToggle(habit.id,d,done);setLast({habit,date:d,done,previousCount});
+  onToggle(habit.id,d,done);setLast({habit,date:d,done});
   if(filter==='all'||d!==date)return;
   const i=ordered.findIndex(h=>h.id===habit.id),next=[...ordered.slice(i+1),...ordered.slice(0,i)].find(h=>h.id!==habit.id&&matches(h));
   requestAnimationFrame(()=>{
@@ -59,19 +58,11 @@ export default function WeeklyBoard({state,date,current,onDate,onToggle,onEdit,o
   });
  };
  const undo=()=>{
-  if(!last)return;const previous=last;if(previous.previousCount!==undefined)onCount(previous.previousCount,previous.date);else onToggle(previous.habit.id,previous.date,!previous.done);remember({filter:'all',collapsed:collapsed.filter(g=>g!==habitGroup(previous.habit))});setLast(null);
+  if(!last)return;const previous=last;onToggle(previous.habit.id,previous.date,!previous.done);remember({filter:'all',collapsed:collapsed.filter(g=>g!==habitGroup(previous.habit))});setLast(null);
   requestAnimationFrame(()=>{
    const mobile=view==='day'||window.matchMedia('(max-width:899px)').matches;
-   const selector=mobile&&previous.habit.id==='H29'&&previous.previousCount===7?`#count-minus-${previous.date}`:`#${mobile?'day':'matrix'}-${previous.date}-${previous.habit.id}`;
+   const selector=`#${mobile?'day':'matrix'}-${previous.date}-${previous.habit.id}`;
    root.current?.querySelector<HTMLButtonElement>(selector)?.focus();
-  });
- };
- const updateCount=(habit:Habit,value:number)=>{
-  const previousCount=chalisaCount(state,date);onCount(value,date);setLast({habit,date,done:value===7,count:value,previousCount});
-  requestAnimationFrame(()=>{
-   if((filter==='todo'&&value===7)||(filter==='done'&&value<7))root.current?.querySelector<HTMLButtonElement>(`[data-filter=${filter}]`)?.focus();
-   else if(value===7)root.current?.querySelector<HTMLButtonElement>(`#count-minus-${date}`)?.focus();
-   else if(value===0)root.current?.querySelector<HTMLButtonElement>(`#day-${date}-H29`)?.focus();
   });
  };
  const moveWeek=(offset:number)=>onDate(ds[Math.max(0,Math.min(89,dayNumber(state.config.start,date)-1+offset*7))]);
@@ -99,16 +90,12 @@ export default function WeeklyBoard({state,date,current,onDate,onToggle,onEdit,o
     <h3><button className="day-group-toggle" aria-expanded={open} aria-controls={'routine-'+group.key} onClick={()=>remember({collapsed:open?[...collapsed,group.key]:collapsed.filter(g=>g!==group.key)})}><Icon size={18} aria-hidden="true"/><span>{group.title}<small>{doneInGroup} of {all.length} complete</small></span><strong>{all.length===doneInGroup?'All done':`${all.length-doneInGroup} left`}</strong><ChevronDown size={18} className={open?'expanded':''} aria-hidden="true"/></button></h3>
     <div id={'routine-'+group.key} hidden={!open} className="day-group-items">{items.map(h=>{
      const done=!future&&!!state.checks[date]?.[h.id],run=streak(state,h,date<current?date:current);
-     if(h.id==='H29'){
-      const count=future?0:chalisaCount(state,date);
-      return <div className={'day-habit counted-habit '+(done?'is-done':'')} key={h.id}><div className="counted-copy"><strong>{h.name}</strong><small>{done?'All seven complete':future?'Upcoming':'Add each recitation. Your count stays saved.'}</small></div><Definition habit={h}/><div className="recitation-controls" role="group" aria-label="Hanuman Chalisa daily recitations"><button id={`count-minus-${date}`} disabled={future||count===0} aria-label="Remove one Hanuman Chalisa recitation" onClick={()=>updateCount(h,count-1)}><Minus size={18}/></button><output aria-live="polite" aria-label={`${count} of 7 recitations`}>{count}<span> / 7</span></output><button id={`day-${date}-${h.id}`} disabled={future||count===7} aria-label="Add one Hanuman Chalisa recitation" onClick={()=>updateCount(h,count+1)}><Plus size={18}/></button></div><div className="recitation-dots" aria-hidden="true">{Array.from({length:7},(_,i)=><i key={i} data-done={i<count}/>)}</div></div>;
-     }
      return <div className={'day-habit '+(done?'is-done':'')} key={h.id}><Checkbox id={`day-${date}-${h.id}`} checked={done} disabled={future} aria-label={h.name} className="day-check" onCheckedChange={v=>toggle(h,date,v===true)}/><label htmlFor={`day-${date}-${h.id}`}><strong>{h.name}</strong><small>{done?'Completed':future?'Upcoming':h.category}{run>0&&<span><Flame size={11} aria-hidden="true"/>{run}d</span>}</small></label><Definition habit={h}/></div>
     })}{!items.length&&<p className="group-empty">{filter==='done'?'Nothing checked off here yet.':'Everything in this section is complete.'}</p>}</div>
    </section>;
   })}{!daily.length&&<div className="board-empty">No habits scheduled. A rest day.</div>}<button className="expand-routine" onClick={()=>remember({collapsed:collapsed.length?[]:groups.map(g=>g.key)})}>{collapsed.length?'Expand all sections':'Collapse all sections'}</button></div>
   <div className="board-footer"><div className="board-legend"><span><Check size={12} aria-hidden="true"/>Done</span><span><Minus size={12} aria-hidden="true"/>Rest</span><span className="legend-future">Future dates open on their day</span></div><button onClick={onEdit}><Settings2 size={14} aria-hidden="true"/>Edit routine</button></div>
-  <div className="board-feedback"><span>{last?last.count!==undefined?`Hanuman Chalisa · ${last.count} / 7 recorded`:`${last.habit.name} ${last.done?'completed':'reopened'} · ${formatDate(last.date)}`:''}</span>{last&&<button onClick={undo}>Undo</button>}</div>
-  <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{last?(last.count!==undefined?`Hanuman Chalisa: ${last.count} of 7 recorded.`:`${last.habit.name} ${last.done?'completed':'reopened'} on ${formatDate(last.date)}.`): ''}</span>
+  <div className="board-feedback"><span>{last?`${last.habit.name} ${last.done?'completed':'reopened'} · ${formatDate(last.date)}`:''}</span>{last&&<button onClick={undo}>Undo</button>}</div>
+  <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">{last?(`${last.habit.name} ${last.done?'completed':'reopened'} on ${formatDate(last.date)}.`): ''}</span>
  </section>
 }

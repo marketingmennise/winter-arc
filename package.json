@@ -1,6 +1,6 @@
 {
-  "name": "winter-arc-android",
-  "version": "1.1.0",
+  "name": "winter-arc-generic",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "engines": {

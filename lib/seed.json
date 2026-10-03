@@ -1,676 +1,153 @@
 {
   "config": {
-    "name": "Rutvik",
-    "start": "2026-10-01",
+    "name": "Your name",
+    "start": "2026-01-01",
     "target": 0.8,
-    "wake": "05:00",
-    "sleep": 7,
+    "wake": "07:00",
+    "sleep": 8,
     "social": 30
   },
   "habits": [
     {
-      "id": "H01",
-      "name": "Wake at 05:00",
-      "category": "Routine",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Wake by the configured wake time. If you change the target, use that time."
-    },
-    {
-      "id": "H02",
-      "name": "Gym / workout",
-      "category": "Fitness",
-      "active": true,
-      "days": [
-        0,
-        1,
-        3,
-        5
-      ],
-      "definition": "Complete your planned gym or strength workout on scheduled days."
-    },
-    {
-      "id": "H03",
-      "name": "Walking / cycling 20 min",
-      "category": "Fitness",
-      "active": true,
-      "days": [
-        2,
-        4,
-        6
-      ],
-      "definition": "Complete at least 20 minutes of walking or cycling on recovery days."
-    },
-    {
-      "id": "H04",
-      "name": "Vegetarian meal plan",
-      "category": "Food",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Follow the vegetarian meal plan you choose for the day."
-    },
-    {
-      "id": "H05",
-      "name": "Reading / learning 30 min",
-      "category": "Learning",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Read or study for 30 focused minutes. Marketing, AI or consumer behaviour."
-    },
-    {
-      "id": "H06",
-      "name": "Day planning 10 min",
-      "category": "Routine",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Choose the day\u2019s top priority and plan 10 minutes before starting work."
-    },
-    {
-      "id": "H07",
-      "name": "Budget / expenses 5 min",
-      "category": "Money",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Record today\u2019s expenses and check spending for 5 minutes."
-    },
-    {
-      "id": "H08",
-      "name": "Sensinova / Primezen focus",
-      "category": "Company",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "definition": "Complete a 60-minute focused block on the current brand project."
-    },
-    {
-      "id": "H09",
-      "name": "Jarwix growth 60 min",
-      "category": "Jarwix",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4
-      ],
-      "definition": "Spend 60 minutes on the Jarwix offer, prospects, follow-ups or delivery."
-    },
-    {
-      "id": "H10",
-      "name": "AI / marketing practice",
-      "category": "Learning",
-      "active": true,
-      "days": [
-        0,
-        2,
-        4,
-        5
-      ],
-      "definition": "Complete 30 minutes of practical AI or marketing work and save the output."
-    },
-    {
-      "id": "H11",
-      "name": "No alcohol",
-      "category": "Lifestyle",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "No alcohol today. Turn Active to 0 if you do not want to track it."
-    },
-    {
-      "id": "H12",
-      "name": "Personal social limit",
-      "category": "Focus",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Keep personal social media within the configured daily limit. Work use is excluded."
-    },
-    {
-      "id": "H13",
-      "name": "Goal journaling 5 min",
-      "category": "Mindset",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Write a brief win, blocker or reflection for 5 minutes in your daily check-in."
-    },
-    {
-      "id": "H14",
-      "name": "Sleep routine 7 hours",
-      "category": "Recovery",
-      "active": true,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Mark complete when sleep meets the configured sleep target. Log actual hours separately."
-    },
-    {
-      "id": "H15",
-      "name": "Weekly planning / review",
-      "category": "Routine",
-      "active": true,
-      "days": [
-        6
-      ],
-      "definition": "Review your week and plan the next one each Sunday."
-    },
-    {
-      "id": "H16",
-      "name": "Cold shower (optional)",
-      "category": "Lifestyle",
-      "active": false,
-      "days": [
-        0,
-        1,
-        2,
-        3,
-        4,
-        5,
-        6
-      ],
-      "definition": "Optional reference habit. Activate only if you choose to include it."
-    }
-  ],
-  "tasks": [
-    {
-      "id": "T01",
-      "title": "Choose one client segment and define one offer for UK, Middle East, Australia or Europe.",
-      "project": "Jarwix",
-      "week": 1,
-      "date": "2026-10-01",
-      "definition": "One segment, buyer problem and deliverable documented.",
-      "done": false
-    },
-    {
-      "id": "T02",
-      "title": "Confirm brand priorities and schedule the 36-post Sensinova education campaign.",
-      "project": "Company",
-      "week": 1,
-      "date": "2026-10-02",
-      "definition": "12 weeks, 3 carousels/week. Posts 1\u20135 basics; 6\u201314 microwave; 15\u201323 PIR; 24\u201332 presence; 33\u201336 selection. Each carousel: 2\u20133 slides maximum; 1,000\u20131,500 combined Question + Answer characters; first 125 characters a hook; CTA on the final slide.",
-      "done": false
-    },
-    {
-      "id": "T03",
-      "title": "Set your routine, fitness baseline, spending budget and 90-day goals.",
-      "project": "Personal",
-      "week": 1,
-      "date": "2026-10-03",
-      "definition": "Chosen targets and schedule entered in Setup.",
-      "done": false
-    },
-    {
-      "id": "T04",
-      "title": "List household commitments and plan support for your father\u2019s retirement.",
-      "project": "Family finances",
-      "week": 1,
-      "date": "2026-10-04",
-      "definition": "Monthly commitments and savings priorities documented.",
-      "done": false
-    },
-    {
-      "id": "T05",
-      "title": "Draft a service page and a case study of the WhatsApp chatbot.",
-      "project": "Jarwix",
-      "week": 2,
-      "date": "2026-10-08",
-      "definition": "Problem, workflow and verified cost reduction described.",
-      "done": false
-    },
-    {
-      "id": "T06",
-      "title": "Audit key SEO pages for Sensinova and Primezen.",
-      "project": "Company",
-      "week": 2,
-      "date": "2026-10-09",
-      "definition": "Prioritized fixes with URLs and evidence.",
-      "done": false
-    },
-    {
-      "id": "T07",
-      "title": "Draft or publish two LinkedIn posts about marketing or AI.",
-      "project": "Authority",
-      "week": 2,
-      "date": "2026-10-10",
-      "definition": "Two complete posts with a useful example.",
-      "done": false
-    },
-    {
-      "id": "T08",
-      "title": "Research relevant global prospects and prepare regional outreach.",
-      "project": "Jarwix",
-      "week": 3,
-      "date": "2026-10-15",
-      "definition": "Prospect list and message adapted to the selected market.",
-      "done": false
-    },
-    {
-      "id": "T09",
-      "title": "Define content pillars and prepare the next 3 Sensinova carousels.",
-      "project": "Company",
-      "week": 3,
-      "date": "2026-10-16",
-      "definition": "Q&A + visual idea / message. Max 2\u20133 slides. 1,000\u20131,500 Q&A characters, first 125 as hook, CTA on final slide.",
-      "done": false
-    },
-    {
-      "id": "T10",
-      "title": "Build one hands-on AI workflow and save the output.",
-      "project": "Skills",
-      "week": 3,
-      "date": "2026-10-17",
-      "definition": "Runnable workflow or documented demo.",
-      "done": false
-    },
-    {
-      "id": "T11",
-      "title": "Fix and test forward / reverse movie-scene video behaviour.",
-      "project": "Primezen",
-      "week": 3,
-      "date": "2026-10-18",
-      "definition": "Exit during playback and after completion both reverse smoothly.",
-      "done": false
-    },
-    {
-      "id": "T12",
-      "title": "Run approved outreach and keep an independent follow-up queue.",
-      "project": "Jarwix",
-      "week": 4,
-      "date": "2026-10-22",
-      "definition": "Next action and date captured per prospect.",
-      "done": false
-    },
-    {
-      "id": "T13",
-      "title": "Map the Meta Ads AI workflow with human review points.",
-      "project": "Company",
-      "week": 4,
-      "date": "2026-10-23",
-      "definition": "Inputs, decisions, review and measurement documented.",
-      "done": false
-    },
-    {
-      "id": "T14",
-      "title": "Complete the day-28 review and adjust your routine.",
-      "project": "Personal",
-      "week": 4,
-      "date": "2026-10-24",
-      "definition": "Weekly Review includes wins, obstacles and next-week changes.",
-      "done": false
-    },
-    {
-      "id": "T15",
-      "title": "Create a discovery and operations audit template.",
-      "project": "Jarwix",
-      "week": 5,
-      "date": "2026-10-29",
-      "definition": "Questions, data request and follow-up gaps covered.",
-      "done": false
-    },
-    {
-      "id": "T16",
-      "title": "Review measurement and controls for the existing AI-managed Google Ads.",
-      "project": "Company",
-      "week": 5,
-      "date": "2026-10-30",
-      "definition": "Conversions, budgets and review decisions checked.",
-      "done": false
-    },
-    {
-      "id": "T17",
-      "title": "Write a LinkedIn marketing case with a clear practical lesson.",
-      "project": "Authority",
-      "week": 5,
-      "date": "2026-10-31",
-      "definition": "Verified evidence and one useful takeaway.",
-      "done": false
-    },
-    {
-      "id": "T18",
-      "title": "Build a follow-up / reporting demo with minimal manual sales-team input.",
-      "project": "Jarwix",
-      "week": 6,
-      "date": "2026-11-05",
-      "definition": "Demo shows lead capture, follow-up queue and weekly reporting.",
-      "done": false
-    },
-    {
-      "id": "T19",
-      "title": "Define order-chatbot requirements and exception paths.",
-      "project": "Primezen",
-      "week": 6,
-      "date": "2026-11-06",
-      "definition": "Products, order capture, payment, handoff and failure cases documented.",
-      "done": false
-    },
-    {
-      "id": "T20",
-      "title": "Create a reusable checklist for an AI workflow.",
-      "project": "Skills",
-      "week": 6,
-      "date": "2026-11-07",
-      "definition": "Checklist includes inputs, validation and human review.",
-      "done": false
-    },
-    {
-      "id": "T21",
-      "title": "Hold discovery conversations or refine the prospect message from responses.",
-      "project": "Jarwix",
-      "week": 7,
-      "date": "2026-11-12",
-      "definition": "Evidence of the current client problem and next action.",
-      "done": false
-    },
-    {
-      "id": "T22",
-      "title": "Test the existing RAG chatbot with representative questions.",
-      "project": "Company",
-      "week": 7,
-      "date": "2026-11-13",
-      "definition": "Answers, retrieval gaps and memory behaviour reviewed.",
-      "done": false
-    },
-    {
-      "id": "T23",
-      "title": "Study one deeper marketing, AI or consumer-behaviour topic.",
-      "project": "Skills",
-      "week": 7,
-      "date": "2026-11-14",
-      "definition": "Notes plus one practical application.",
-      "done": false
-    },
-    {
-      "id": "T24",
-      "title": "Prepare a scoped pilot proposal for an interested prospect.",
-      "project": "Jarwix",
-      "week": 8,
-      "date": "2026-11-19",
-      "definition": "Deliverables, timetable, fee and acceptance criteria drafted.",
-      "done": false
-    },
-    {
-      "id": "T25",
-      "title": "Document Middle East / global content and .com requirements.",
-      "project": "Company",
-      "week": 8,
-      "date": "2026-11-20",
-      "definition": "Audience, site requirements and content changes prioritized.",
-      "done": false
-    },
-    {
-      "id": "T26",
-      "title": "Complete the day-56 review and reset the next month.",
-      "project": "Personal",
-      "week": 8,
-      "date": "2026-11-21",
-      "definition": "One routine change supported by tracker data.",
-      "done": false
-    },
-    {
-      "id": "T27",
-      "title": "Review every open prospect and complete the next follow-up.",
-      "project": "Jarwix",
-      "week": 9,
-      "date": "2026-11-26",
-      "definition": "No open prospect without a next action.",
-      "done": false
-    },
-    {
-      "id": "T28",
-      "title": "Improve the blog / website update workflow and review a draft.",
-      "project": "Company",
-      "week": 9,
-      "date": "2026-11-27",
-      "definition": "Useful draft and publishing review process documented.",
-      "done": false
-    },
-    {
-      "id": "T29",
-      "title": "Write a consumer-behaviour insight for LinkedIn.",
-      "project": "Authority",
-      "week": 9,
-      "date": "2026-11-28",
-      "definition": "Concrete observation, evidence and marketing application.",
-      "done": false
-    },
-    {
-      "id": "T30",
-      "title": "Deliver the scoped pilot if agreed. Otherwise improve the demo.",
-      "project": "Jarwix",
-      "week": 10,
-      "date": "2026-12-03",
-      "definition": "Working output and documented feedback.",
-      "done": false
-    },
-    {
-      "id": "T31",
-      "title": "Draft a Pinterest test plan for both brands for approval.",
-      "project": "Company",
-      "week": 10,
-      "date": "2026-12-04",
-      "definition": "Audience, creative, budget request and success measures.",
-      "done": false
-    },
-    {
-      "id": "T32",
-      "title": "Review spending, time use and fitness consistency.",
-      "project": "Personal",
-      "week": 10,
-      "date": "2026-12-05",
-      "definition": "One concrete adjustment to each relevant area.",
-      "done": false
-    },
-    {
-      "id": "T33",
-      "title": "Document verified pilot or demo results in a case asset.",
-      "project": "Jarwix",
-      "week": 11,
-      "date": "2026-12-10",
-      "definition": "Evidence, before / after and limitations accurately recorded.",
-      "done": false
-    },
-    {
-      "id": "T34",
-      "title": "Prepare dealer welcome-kit and experience-centre asset requirements.",
-      "project": "Company",
-      "week": 11,
-      "date": "2026-12-11",
-      "definition": "Prioritized list, content and owner requirements.",
-      "done": false
-    },
-    {
-      "id": "T35",
-      "title": "Assemble a small portfolio of marketing and AI work.",
-      "project": "Authority",
-      "week": 11,
-      "date": "2026-12-12",
-      "definition": "Three useful examples with your contribution and evidence.",
-      "done": false
-    },
-    {
-      "id": "T36",
-      "title": "Review the prospect funnel and improve the offer or outreach.",
-      "project": "Jarwix",
-      "week": 12,
-      "date": "2026-12-17",
-      "definition": "Response, conversation and proposal counts based on actual records.",
-      "done": false
-    },
-    {
-      "id": "T37",
-      "title": "Review Instagram / SEO performance and finish the 36-post education plan.",
-      "project": "Company",
-      "week": 12,
-      "date": "2026-12-18",
-      "definition": "Actual results logged. No assumed follower or traffic gains.",
-      "done": false
-    },
-    {
-      "id": "T38",
-      "title": "Write your personal routine playbook for the next quarter.",
-      "project": "Personal",
-      "week": 12,
-      "date": "2026-12-19",
-      "definition": "Repeatable routine and lessons from the tracker.",
-      "done": false
-    },
-    {
-      "id": "T39",
-      "title": "Choose next-quarter priorities from actual Jarwix progress.",
-      "project": "Jarwix",
-      "week": 13,
-      "date": "2026-12-24",
-      "definition": "Three priorities and one next action for each.",
-      "done": false
-    },
-    {
-      "id": "T40",
-      "title": "Review education Part 1 and decide the direction for Part 2.",
-      "project": "Company",
-      "week": 13,
-      "date": "2026-12-25",
-      "definition": "Part 1 completed before Part 2 begins.",
-      "done": false
-    },
-    {
-      "id": "T41",
-      "title": "Complete the final 90-day review and choose what to continue.",
-      "project": "Personal",
-      "week": 13,
-      "date": "2026-12-26",
-      "definition": "Final reflections and next-quarter targets recorded.",
-      "done": false
-    }
-  ],
-  "checks": {},
-  "logs": {},
-  "reviews": {},
-  "goals": [
-    {
       "id": "G01",
-      "name": "Weight",
-      "unit": "kg",
-      "baseline": null,
-      "target": null,
-      "current": null
+      "name": "Plan the day",
+      "category": "Planning",
+      "group": "morning",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Choose your most important task and write a simple plan."
     },
     {
       "id": "G02",
-      "name": "Jarwix clients",
-      "unit": "clients",
-      "baseline": null,
-      "target": null,
-      "current": null
+      "name": "Read or learn",
+      "category": "Learning",
+      "group": "morning",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Spend a little time learning something useful or interesting. Choose your own duration."
     },
     {
       "id": "G03",
-      "name": "Jarwix revenue",
-      "unit": "INR",
-      "baseline": null,
-      "target": null,
-      "current": null
+      "name": "Move your body",
+      "category": "Movement",
+      "group": "focus",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Choose movement that suits your day, such as walking, stretching or a workout."
     },
     {
       "id": "G04",
-      "name": "Monthly personal budget",
-      "unit": "INR",
-      "baseline": null,
-      "target": null,
-      "current": null
+      "name": "Hydration check-in",
+      "category": "Wellbeing",
+      "group": "focus",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Pause to check your thirst and keep water within reach. Set a personal target if you want one."
     },
     {
       "id": "G05",
-      "name": "Savings",
-      "unit": "INR",
-      "baseline": null,
-      "target": null,
-      "current": null
+      "name": "Focused work or study",
+      "category": "Focus",
+      "group": "focus",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Finish one distraction-free session on something that matters to you."
     },
     {
       "id": "G06",
-      "name": "Education campaign",
-      "unit": "posts",
-      "baseline": null,
-      "target": 36,
-      "current": null
+      "name": "Connect with someone",
+      "category": "Relationships",
+      "group": "evening",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Make time for a meaningful conversation or shared activity."
+    },
+    {
+      "id": "G07",
+      "name": "Personal care",
+      "category": "Self-care",
+      "group": "evening",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Complete a self-care routine that suits you."
+    },
+    {
+      "id": "G08",
+      "name": "Evening wind-down",
+      "category": "Rest",
+      "group": "evening",
+      "active": true,
+      "days": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "definition": "Set aside a little time to unwind and prepare for rest."
     }
   ],
-  "recitations": {},
-  "activity": {},
-  "textEditRevisions": {},
-  "appliedEditIds": []
+  "tasks": [],
+  "checks": {},
+  "logs": {},
+  "reviews": {},
+  "goals": []
 }
