@@ -7,7 +7,7 @@ jobs:
   apk:
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -25,6 +25,10 @@ jobs:
       - run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - run: npm ci
       - run: npm test
+      - name: Test native alarm scheduling
+        run: |
+          javac -d /tmp/arc-alarm-tests android/app/src/main/java/com/rutvik/winterarc/AlarmTime.java tests/java/com/rutvik/winterarc/AlarmTimeTest.java
+          java -cp /tmp/arc-alarm-tests com.rutvik.winterarc.AlarmTimeTest
       - run: npm run sync
       - run: chmod +x android/gradlew && cd android && ./gradlew :app:assembleDebug --no-daemon --max-workers=2
       - uses: actions/upload-artifact@v4
@@ -32,3 +36,15 @@ jobs:
           if-no-files-found: error
           name: winter-arc-debug-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
+      - name: Publish Android v1.1.0 APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          cp android/app/build/outputs/apk/debug/app-debug.apk winter-arc-v1.1.0.apk
+          sha256sum winter-arc-v1.1.0.apk > SHA256SUMS.txt
+          if gh release view v1.1.0-android > /dev/null 2>&1; then
+            echo "Release already exists; existing assets left unchanged."
+          else
+            gh release create v1.1.0-android --target "$GITHUB_SHA" --title "Winter Arc Android v1.1.0 — Task alarms" --prerelease --notes-file RELEASE_NOTES_1.1.0.md winter-arc-v1.1.0.apk SHA256SUMS.txt
