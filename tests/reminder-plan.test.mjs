@@ -1,0 +1,7 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {defaultReminders,notificationPlan,reminderSlots} from '../app/native-reminders.ts';
+test('desk reminders use eighteen unique half-hour daytime slots',()=>{const p=notificationPlan({...defaultReminders,enabled:true});assert.equal(p.length,18);assert.deepEqual(p[0].schedule.on,{hour:9,minute:0,second:0});assert.deepEqual(p.at(-1).schedule.on,{hour:17,minute:30,second:0});assert.equal(new Set(p.map(n=>n.id)).size,p.length);assert(p.every(n=>n.isExactNotification===false));});
+test('custom daytime hours preserve thirty-minute cadence',()=>{const p=notificationPlan({...defaultReminders,enabled:true,start:'10:15',end:'11:45'});assert.deepEqual(p.map(n=>[n.schedule.on.hour,n.schedule.on.minute]),[[10,15],[10,45],[11,15]]);});
+test('pause produces no schedules and invalid active schedules are rejected',()=>{assert.deepEqual(notificationPlan(defaultReminders),[]);assert.throws(()=>reminderSlots({...defaultReminders,start:'18:00',end:'09:00'}));assert.throws(()=>reminderSlots({...defaultReminders,start:'25:00'}));assert.throws(()=>reminderSlots({...defaultReminders,enabled:true,movement:false,water:false}));});
+test('combined reminders do not duplicate notifications',()=>{const base={...defaultReminders,enabled:true};assert(notificationPlan(base).every(n=>n.body.includes('Stand up')&&n.body.includes('water')));assert.equal(notificationPlan({...base,movement:false})[0].title,'Water check-in');assert.equal(notificationPlan({...base,water:false})[0].title,'Time to move');});
