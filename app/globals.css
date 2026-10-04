@@ -943,3 +943,38 @@ h1[tabindex="-1"]:focus {outline:none}
 
 .android-device-settings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px;align-items:start;margin-bottom:28px}.android-device-settings>section{min-width:0}.android-backup button{white-space:normal;height:auto;min-height:44px;line-height:1.45;text-align:left}.android-backup dd{text-align:right;overflow-wrap:anywhere}.native-android{overscroll-behavior:none}
 @media(max-width:899px){.android-device-settings{grid-template-columns:minmax(0,1fr);gap:18px}.android-backup{padding:20px}}
+
+.settings-nav{display:flex;flex-wrap:wrap;gap:8px;height:auto;background:transparent;margin:0 0 20px;justify-content:flex-start}
+.settings-nav [role=tab]{min-height:44px;min-width:64px;border:1px solid var(--border);border-radius:8px;padding:10px 15px}
+.settings-nav [role=tab][data-state=active]{background:var(--lime,#d6efb1);color:#172016}
+.settings-tabs>[role=tabpanel]>.panel{margin-bottom:20px}
+.settings-feedback{color:var(--mint);margin-top:12px}
+.task-details{margin-top:14px;border-top:1px solid var(--border)}
+.task-details summary{min-height:44px;display:flex;align-items:center;cursor:pointer;color:#c2cfbd;font-size:14px}
+.task-details summary::before{content:'+';margin-right:10px}
+.task-details[open] summary::before{content:'−'}
+.task-details .note{margin-top:16px}
+.app-dialog .weekday-picker{grid-template-columns:repeat(auto-fit,minmax(44px,1fr));gap:8px}
+.weekday-picker button{min-width:44px;min-height:44px}
+.journal-habits>.day-opening{margin-top:0}
+@media(max-width:899px){
+ .day-opening{grid-template-columns:minmax(0,1fr) 54px;padding:12px 14px 0;gap:10px 14px;margin:0 0 12px}
+ .day-opening-copy h2{font-size:17px;line-height:1.25;margin-bottom:4px;letter-spacing:0}
+ .day-opening-copy h2 span{display:inline}
+ .day-opening-copy>p:last-child{font-size:12px}
+ .day-opening-ring{width:54px;height:54px;margin-bottom:8px}
+ .day-opening-ring strong{font-size:19px}
+ .day-opening-ring small{font-size:11px}
+ .day-opening-ring em{display:none}
+ .day-next{min-height:44px;margin-top:0;padding:8px 0;gap:8px}
+ .day-next span{flex-direction:row;align-items:center;gap:10px}
+ .day-next strong{font-size:12px}
+ .settings-nav [role=tab]{flex:1;padding:10px 8px}
+}
+@media(max-width:899px){
+ .day-opening{padding:8px 12px;grid-template-columns:minmax(0,1fr) 44px;gap:0 10px}
+ .day-opening-copy h2{display:none}
+ .day-opening-ring{grid-column:2;grid-row:1/3;width:44px;height:44px;margin:0}
+ .day-next{grid-column:1;border:0;padding:5px 0;min-height:44px}
+ .day-next small{display:none}
+}
