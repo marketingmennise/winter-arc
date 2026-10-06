@@ -14,6 +14,7 @@ public final class ArcAlarmStore {
     static final String CHANNEL = "winter-arc-ringing-alarms-v1";
     static final String FIRE = "com.rutvik.winterarc.ALARM_FIRE";
     static final String DISMISS = "com.rutvik.winterarc.ALARM_DISMISS";
+    static final String STOP_ALL = "com.rutvik.winterarc.ALARM_STOP_ALL";
     static final String SNOOZE = "com.rutvik.winterarc.ALARM_SNOOZE";
     static final String CLOSED = "com.rutvik.winterarc.ALARM_CLOSED";
     static final int TEST_ID = 99999, SNOOZE_OFFSET = 100000;

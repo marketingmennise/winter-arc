@@ -18,7 +18,13 @@ public class ArcAlarmService extends Service {
     @Override public IBinder onBind(Intent i){return null;}
     static PendingIntent action(Context c,String action,int id){return PendingIntent.getService(c,id,new Intent(c,ArcAlarmService.class).setAction(action).putExtra("id",id),PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);}
     @Override public int onStartCommand(Intent i,int flags,int startId){
-        if(i==null){stopSelf();return START_NOT_STICKY;}
+        if(i==null){release();stopSelf();return START_NOT_STICKY;}
+        if(ArcAlarmStore.STOP_ALL.equals(i.getAction())){
+            waiting.clear();release();int previous=activeId;activeId=-1;
+            stopForeground(STOP_FOREGROUND_REMOVE);
+            sendBroadcast(new Intent(ArcAlarmStore.CLOSED).setPackage(getPackageName()).putExtra("id",previous));
+            stopSelf();return START_NOT_STICKY;
+        }
         int id=i.getIntExtra("id",-1);
         if(ArcAlarmStore.DISMISS.equals(i.getAction())||ArcAlarmStore.SNOOZE.equals(i.getAction())){
             // An old notification must never dismiss a newer ringing alarm.
@@ -38,7 +44,7 @@ public class ArcAlarmService extends Service {
         PendingIntent open=PendingIntent.getActivity(this,id,screen,PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
         NotificationCompat.Builder n=new NotificationCompat.Builder(this,ArcAlarmStore.CHANNEL)
             .setSmallIcon(com.rutvik.winterarc.R.drawable.ic_notification).setContentTitle(label)
-            .setContentText("Ringing · tap to open, snooze or dismiss")
+            .setContentText("Ringing Â· tap to open, snooze or dismiss")
             .setCategory(NotificationCompat.CATEGORY_ALARM).setPriority(NotificationCompat.PRIORITY_MAX)
             .setOngoing(true).setVisibility(NotificationCompat.VISIBILITY_PRIVATE).setContentIntent(open)
             .setFullScreenIntent(open,true).addAction(0,"Dismiss",action(this,ArcAlarmStore.DISMISS,id));
@@ -46,6 +52,8 @@ public class ArcAlarmService extends Service {
         if(Build.VERSION.SDK_INT>=29)startForeground(NOTIFICATION,n.build(),ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK);else startForeground(NOTIFICATION,n.build());
         wake=((PowerManager)getSystemService(POWER_SERVICE)).newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,"WinterArc:alarm");wake.acquire(6*60*1000L);
         AudioAttributes audio=new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ALARM).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+        final long duration=AlarmSafety.duration(id==ArcAlarmStore.TEST_ID);
+        handler.postDelayed(()->{if(activeId==id){nextOrStop();if(id!=ArcAlarmStore.TEST_ID)missed(this,id,label,"Missed alarm · silenced after 5 minutes");}},duration);
         try{
             Uri uri=RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
             if(uri==null)uri=RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -53,10 +61,10 @@ public class ArcAlarmService extends Service {
         }catch(Exception e){missed(this,id,label,"Alarm sound unavailable. Vibration is still active; check your alarm sound in Android Settings.");}
         vibrator=(Vibrator)getSystemService(VIBRATOR_SERVICE);
         if(vibrator!=null&&vibrator.hasVibrator()){
-            long[] pattern={0,600,400,600,1400};
-            if(Build.VERSION.SDK_INT>=26)vibrator.vibrate(VibrationEffect.createWaveform(pattern,0),audio);else vibrator.vibrate(pattern,0,audio);
+            long[] pattern=AlarmSafety.waveform(duration);
+            if(Build.VERSION.SDK_INT>=26)vibrator.vibrate(VibrationEffect.createWaveform(pattern,-1),audio);else vibrator.vibrate(pattern,-1,audio);
         }
-        handler.postDelayed(()->{missed(this,id,label,"Missed alarm · silenced after 5 minutes");nextOrStop();},5*60*1000L);
+        handler.postDelayed(()->{missed(this,id,label,"Missed alarm Â· silenced after 5 minutes");nextOrStop();},5*60*1000L);
         return START_NOT_STICKY;
     }
     static void cancel(Context c,int id){if(activeId>=0)c.startService(new Intent(c,ArcAlarmService.class).setAction(ArcAlarmStore.DISMISS).putExtra("id",id));}
@@ -73,6 +81,17 @@ public class ArcAlarmService extends Service {
         PendingIntent open=PendingIntent.getActivity(c,0,new Intent(c,MainActivity.class),PendingIntent.FLAG_UPDATE_CURRENT|PendingIntent.FLAG_IMMUTABLE);
         try{((NotificationManager)c.getSystemService(NOTIFICATION_SERVICE)).notify(82000+id,new NotificationCompat.Builder(c,ArcAlarmStore.CHANNEL).setSmallIcon(R.drawable.ic_notification).setContentTitle(label).setContentText(message).setAutoCancel(true).setContentIntent(open).build());}catch(SecurityException ignored){}
     }
-    void release(){handler.removeCallbacksAndMessages(null);if(player!=null){try{player.stop();}catch(Exception ignored){}player.release();player=null;}if(vibrator!=null)vibrator.cancel();if(wake!=null&&wake.isHeld())wake.release();}
+    void release(){
+        MediaPlayer oldPlayer=player;player=null;
+        Vibrator oldVibrator=vibrator;vibrator=null;
+        PowerManager.WakeLock oldWake=wake;wake=null;
+        AlarmSafety.cleanup(
+            ()->handler.removeCallbacksAndMessages(null),
+            ()->{if(oldVibrator!=null)oldVibrator.cancel();},
+            ()->{if(oldPlayer!=null)oldPlayer.stop();},
+            ()->{if(oldPlayer!=null)oldPlayer.release();},
+            ()->{if(oldWake!=null&&oldWake.isHeld())oldWake.release();}
+        );
+    }
     @Override public void onDestroy(){int id=activeId;waiting.clear();release();activeId=-1;stopForeground(STOP_FOREGROUND_REMOVE);sendBroadcast(new Intent(ArcAlarmStore.CLOSED).setPackage(getPackageName()).putExtra("id",id));super.onDestroy();}
 }

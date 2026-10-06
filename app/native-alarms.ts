@@ -12,6 +12,7 @@ export const ArcAlarms=registerPlugin<{
  syncContext(o:{context:Record<string,AlarmSource>}):Promise<void>;
  setDesk(o:{slots:number[];label:string}):Promise<void>;
  test():Promise<void>;
+ stopRinging():Promise<void>;
 }>('ArcAlarms');
 export const hasNativeAlarms=()=>Capacitor.getPlatform()==='android';
 export async function alarmNotifications(){let p=await LocalNotifications.checkPermissions();if(p.display!=='granted')p=await LocalNotifications.requestPermissions();if(p.display!=='granted')throw new Error('Allow notifications in Android Settings before enabling alarms.');}

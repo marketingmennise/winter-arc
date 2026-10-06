@@ -40,7 +40,7 @@ public class ArcAlarmsPlugin extends Plugin {
     }
     @PluginMethod public void save(PluginCall call){try{
         JSObject input=call.getObject("alarm");if(input==null)throw new Exception("Choose an alarm time.");
-        String label=input.optString("label","").trim();if(label.isEmpty()||label.length()>60)throw new Exception("Name the alarm using 1–60 characters.");
+        String label=input.optString("label","").trim();if(label.isEmpty()||label.length()>60)throw new Exception("Name the alarm using 1â€“60 characters.");
         int id=input.optInt("id",0);JSONArray old=ArcAlarmStore.all(getContext()),next=new JSONArray();
         if(id==0){id=1000;for(int n=0;n<old.length();n++){int existing=old.getJSONObject(n).getInt("id");if(existing<5000)id=Math.max(id,existing+1);}if(id>=5000)throw new Exception("Too many alarms.");}
         else if(id<1000||id>=5000||ArcAlarmStore.find(getContext(),id)==null)throw new Exception("Alarm no longer exists. Refresh and try again.");
@@ -64,6 +64,18 @@ public class ArcAlarmsPlugin extends Plugin {
         for(int n=0;n<slots.length();n++){int m=slots.getInt(n);if(m<0||m>=1440)throw new Exception("Invalid alarm time.");next.put(new JSONObject().put("id",5000+m).put("label",label).put("time",String.format(java.util.Locale.ROOT,"%02d:%02d",m/60,m%60)).put("days",127).put("enabled",true));}
         ArcAlarmStore.replace(getContext(),next);call.resolve();
     }catch(Exception e){call.reject(e.getMessage());}}
+    @PluginMethod public void stopRinging(PluginCall call){
+        // Cancels hardware vibration directly as well as stopping the service.
+        // Does not delete alarms, snoozes, or tracker records.
+        getActivity().runOnUiThread(()->{
+            try{
+                android.os.Vibrator vibrator=(android.os.Vibrator)getContext().getSystemService(Context.VIBRATOR_SERVICE);
+                if(vibrator!=null)vibrator.cancel();
+                getContext().startService(new Intent(getContext(),ArcAlarmService.class).setAction(ArcAlarmStore.STOP_ALL));
+                call.resolve();
+            }catch(Exception e){call.reject("Could not stop ringing. Force stop Winter Arc in Android app settings.");}
+        });
+    }
     @PluginMethod public void test(PluginCall call){
         if(!ArcAlarmStore.notifications(getContext())){call.reject("Allow notifications before testing an alarm.");return;}
         try{ContextCompat.startForegroundService(getContext(),new Intent(getContext(),ArcAlarmService.class).putExtra("id",ArcAlarmStore.TEST_ID));call.resolve();}catch(Exception e){call.reject("Could not start the test alarm. Check Android Settings.");}
