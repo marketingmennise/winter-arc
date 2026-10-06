@@ -37,8 +37,8 @@ public class ArcAlarmActivity extends Activity {
         box.addView(text(getIntent().getStringExtra("detail"),16,fg));
         Button dismiss=new Button(this);dismiss.setText("Dismiss alarm");dismiss.setTextSize(18);dismiss.setTextColor(bg);dismiss.setBackgroundTintList(android.content.res.ColorStateList.valueOf(lime));dismiss.setMinHeight(dp(64));
         LinearLayout.LayoutParams p=new LinearLayout.LayoutParams(-1,-2);p.topMargin=dp(28);box.addView(dismiss,p);dismiss.setOnClickListener(v->stop(false));
-        if(id!=ArcAlarmStore.TEST_ID){Button snooze=new Button(this);snooze.setText("Snooze · 5 minutes");snooze.setTextSize(18);snooze.setMinHeight(dp(64));box.addView(snooze,new LinearLayout.LayoutParams(-1,-2));snooze.setOnClickListener(v->stop(true));}
-        box.addView(text("Sound and vibration stop automatically after 5 minutes.",14,fg));
+        if(id!=ArcAlarmStore.TEST_ID){Button snooze=new Button(this);snooze.setText("Snooze Â· 5 minutes");snooze.setTextSize(18);snooze.setMinHeight(dp(64));box.addView(snooze,new LinearLayout.LayoutParams(-1,-2));snooze.setOnClickListener(v->stop(true));}
+        box.addView(text(id==ArcAlarmStore.TEST_ID?"Test sound and vibration stop automatically after 10 seconds.":"Sound and vibration stop automatically after 5 minutes.",14,fg));
     }
     void stop(boolean snooze){startService(new Intent(this,ArcAlarmService.class).setAction(snooze?ArcAlarmStore.SNOOZE:ArcAlarmStore.DISMISS).putExtra("id",id));finish();}
     @Override protected void onDestroy(){if(registered)unregisterReceiver(close);super.onDestroy();}

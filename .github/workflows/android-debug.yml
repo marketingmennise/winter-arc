@@ -2,7 +2,7 @@ name: Build Android APK
 on:
   workflow_dispatch:
   push:
-    branches: [main, 'fix/personal-history-settings-ui']
+    branches: [main, 'fix/personal-history-settings-ui', 'fix/alarm-vibration-stop']
 jobs:
   apk:
     runs-on: ubuntu-latest
@@ -29,6 +29,8 @@ jobs:
         run: |
           javac -d /tmp/arc-alarm-tests android/app/src/main/java/com/rutvik/winterarc/AlarmTime.java tests/java/com/rutvik/winterarc/AlarmTimeTest.java
           java -cp /tmp/arc-alarm-tests com.rutvik.winterarc.AlarmTimeTest
+          javac -d /tmp/arc-alarm-tests android/app/src/main/java/com/rutvik/winterarc/AlarmSafety.java tests/java/com/rutvik/winterarc/AlarmSafetyTest.java
+          java -cp /tmp/arc-alarm-tests com.rutvik.winterarc.AlarmSafetyTest
       - run: npm run sync
       - run: chmod +x android/gradlew && cd android && ./gradlew :app:assembleDebug --no-daemon --max-workers=2
       - uses: actions/upload-artifact@v4
@@ -48,5 +50,5 @@ jobs:
           if gh release view v1.1.0-android > /dev/null 2>&1; then
             echo "Release already exists; existing assets left unchanged."
           else
-            gh release create v1.1.0-android --target "$GITHUB_SHA" --title "Winter Arc Android v1.1.0 — Task alarms" --prerelease --notes-file RELEASE_NOTES_1.1.0.md winter-arc-v1.1.0.apk SHA256SUMS.txt
+            gh release create v1.1.0-android --target "$GITHUB_SHA" --title "Winter Arc Android v1.1.0 â€” Task alarms" --prerelease --notes-file RELEASE_NOTES_1.1.0.md winter-arc-v1.1.0.apk SHA256SUMS.txt
           fi
